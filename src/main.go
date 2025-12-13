@@ -13,7 +13,7 @@ type Course struct {
 
 func coursesHandler(w http.ResponseWriter, r *http.Request) {
     data := []Course{
-        {ID: 1, Name: "DevOps Basics"},
+        {ID: 1, Name: "DevOps"},
         {ID: 2, Name: "Kubernetes Beginner"},
         {ID: 3, Name: "Docker & CI/CD"},
     }
