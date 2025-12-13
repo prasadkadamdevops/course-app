@@ -30,10 +30,10 @@ jobs:
 
       - name: Push Docker image
         run: |
-          docker push prasadfdevops/course-app:${GITHUB_SHA::8}
+          docker push prasadkadam125/course-app:${GITHUB_SHA::8}
 
       - name: Update Deployment in kind
         run: |
-          kubectl set image deployment/course-app course-app=prasadfdevops/course-app:${GITHUB_SHA::8}
+          kubectl set image deployment/course-app course-app=prasadkadam125/course-app:${GITHUB_SHA::8}
           kubectl rollout status deployment/course-app
 
