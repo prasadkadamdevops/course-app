@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: self-hosted  # Use your WSL self-hosted runner
+    runs-on: self-hosted   # WSL self-hosted runner
 
     steps:
       - name: Checkout repo
@@ -18,22 +18,30 @@ jobs:
         with:
           go-version: '1.22'
 
+      # ✅ Build image with TWO tags
       - name: Build Docker image
         run: |
-          docker build -t prasadkadam125/course-app:${GITHUB_SHA::8} .
+          docker build \
+            -t prasadkadam125/course-app:${GITHUB_SHA::8} \
+            -t prasadkadam125/course-app:latest .
 
+      # ✅ Login to Docker Hub
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      # ✅ Push BOTH tags
       - name: Push Docker image
         run: |
           docker push prasadkadam125/course-app:${GITHUB_SHA::8}
+          docker push prasadkadam125/course-app:latest
 
+      # ✅ Update deployment using immutable tag
       - name: Update Deployment in kind
         run: |
-          kubectl set image deployment/course-app course-app=prasadkadam125/course-app:${GITHUB_SHA::8}
-          kubectl rollout status deployment/course-app
+          kubectl set image deployment/course-app \
+            course-app=prasadkadam125/course-app:${GITHUB_SHA::8}
+          kubectl rollout status deployment/course-app --timeout=5m
 
